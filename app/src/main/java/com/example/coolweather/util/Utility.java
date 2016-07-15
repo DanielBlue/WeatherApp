@@ -17,16 +17,18 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * Created by 毛琦 on 2016/7/13.
+ * 解析json字符串，并存储的工具类
  */
 public class Utility {
     private static SharedPreferences sharedPreferences = null;
     private static final String tag = "Utility";
+
     /**
-     * 将省份信息存入数据库
-     * @param coolWeatherDB 数据库工具类对象
-     * @param response  服务器返回的json字符串
-     * @return  true 保存成功 flase保存失败
+     * 解析Province数据并保存至数据库
+     * @param coolWeatherDB 数据库操作的工具类对象
+     * @param response 服务器返回的json字符串
+     * @param provinceList 显示到listview上的数据
+     * @return 加载了数据的cityList
      */
     public synchronized static List<String> handleProvincesResponse(CoolWeatherDB coolWeatherDB,String response,List<String> provinceList){
         if(!TextUtils.isEmpty(response)){
@@ -51,11 +53,12 @@ public class Utility {
     }
 
     /**
-     * 将城市信息存入数据库
-     * @param coolWeatherDB 数据库工具类对象
-     * @param response 服务器返回的json字符串
-     * @param provinceName 省份的名字
-     * @return true 保存成功 flase保存失败
+     * 解析City数据并保存至数据库
+     * @param coolWeatherDB 数据库操作的工具类对象
+     * @param response  服务器返回的json字符串
+     * @param cityList  显示到listview上的数据
+     * @param provinceName  对应的省名称
+     * @return  加载了数据的cityList
      */
     public synchronized static List<String> handleCityResponse(CoolWeatherDB coolWeatherDB,String response,List<String> cityList,String provinceName){
         if(!TextUtils.isEmpty(response)){
@@ -84,11 +87,12 @@ public class Utility {
     }
 
     /**
-     * 将县城，区信息存入数据库
-     * @param coolWeatherDB 数据库工具类对象
-     * @param response 服务器返回的json字符串
-     * @param cityName 城市的名字
-     * @return true 保存成功 flase保存失败
+     * 解析County数据并保存至数据库
+     * @param coolWeatherDB 数据库操作的工具类对象
+     * @param response  服务器返回的json字符串
+     * @param countyList  显示到listview上的数据
+     * @param cityName  对应的市名称
+     * @return  加载了数据的countyList
      */
     public synchronized static List<String> handleCountyResponse(CoolWeatherDB coolWeatherDB,String response,List<String> countyList,String cityName){
         if(!TextUtils.isEmpty(response)){
@@ -117,7 +121,13 @@ public class Utility {
     }
 
 
-
+    /**
+     * 解析服务器返回的天气json字符串，并存储至sp中
+     * @param context 上下文环境
+     * @param response  服务器返回的json字符串
+     * @param areaName  要查询天气的地名
+     * @return  是否解析成功
+     */
     public synchronized static boolean saveWeatherInfo(Context context, String response,String areaName){
         if(!TextUtils.isEmpty(response)){
             try {
@@ -155,11 +165,24 @@ public class Utility {
         return false;
     }
 
+    /**
+     * 从sp中读取天气情况
+     * @param context 上下文
+     * @param key   数据储存的key
+     * @return  得到的字符串数据
+     */
     public static String getWeatherInfo(Context context, String key){
         if(sharedPreferences == null) {
             sharedPreferences = context.getSharedPreferences(ContentValue.WEATHER_INFORMATION, Context.MODE_PRIVATE);
         }
         String result = sharedPreferences.getString(key,null);
         return result;
+    }
+
+    public static void setWeatherInfo(Context context,String key,String value){
+        if(sharedPreferences == null) {
+            sharedPreferences = context.getSharedPreferences(ContentValue.WEATHER_INFORMATION, Context.MODE_PRIVATE);
+        }
+        sharedPreferences.edit().putString(key,value).commit();
     }
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.coolweather.R;
 import com.example.coolweather.model.CoolWeatherDB;
 import com.example.coolweather.model.Province;
+import com.example.coolweather.util.ActivityManager;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
@@ -40,6 +41,7 @@ public class ChooseProvinceActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager.add(this);
         setContentView(R.layout.choose_area);
         TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText("中国");
@@ -56,6 +58,9 @@ public class ChooseProvinceActivity extends Activity {
         });
     }
 
+    /**
+     * 先从数据库中找数据，如果没有就发送网络请求获取数据
+     */
     private void query() {
         List<Province> list = coolWeatherDB.loadProvince();
         if(list.size()>0){

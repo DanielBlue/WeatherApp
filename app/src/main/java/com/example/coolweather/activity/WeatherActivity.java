@@ -1,10 +1,12 @@
 package com.example.coolweather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +19,7 @@ import com.example.coolweather.util.Utility;
 /**
  * Created by 毛琦 on 2016/7/14.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener{
     private static final String tag = "WeatherActivity";
     private static final int INIT = 100;
     private static final int LOADING = 101;
@@ -42,6 +44,14 @@ public class WeatherActivity extends Activity {
      * 显示气温范围
      */
     private TextView temp1;
+    /**
+     * 切换城市
+     */
+    private Button switch_city;
+    /**
+     * 更新天气
+     */
+    private Button update_weather;
     private LinearLayout weather;
     private String countyName;
     private String publishText;
@@ -70,19 +80,28 @@ public class WeatherActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_layout);
+        if(Utility.getWeatherInfo(this,ContentValue.AREA_NAME)==null){
+            switchCity();
+        }
         weather = (LinearLayout) findViewById(R.id.weather_info_layout);
         city_name = (TextView) findViewById(R.id.city_name);
         publish_text = (TextView) findViewById(R.id.publish_text);
         current_date = (TextView) findViewById(R.id.current_date);
         weather_desp = (TextView) findViewById(R.id.weather_desp);
         temp1 = (TextView) findViewById(R.id.temp1);
-        initUI();
+        switch_city = (Button) findViewById(R.id.switch_city);
+        update_weather = (Button) findViewById(R.id.update_weather);
+        switch_city.setOnClickListener(this);
+        update_weather.setOnClickListener(this);
         initData();
     }
 
+    /**
+     * 初始化数据
+     */
     private void initData() {
         final Message message = new Message();
-        countyName = getIntent().getStringExtra("CountyName");
+        countyName = Utility.getWeatherInfo(this,ContentValue.AREA_NAME);
         String address = "http://v.juhe.cn/weather/index?cityname="+countyName+"&key=5d9d8d7431f0b864fa216cb311e5c226";
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
@@ -114,5 +133,26 @@ public class WeatherActivity extends Activity {
         current_date.setText(today);
         weather_desp.setText(weatherDesp);
         temp1.setText(temp);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.switch_city:
+                switchCity();
+                break;
+            case R.id.update_weather:
+                initData();
+                break;
+        }
+    }
+
+    /**
+     * 跳转到选择地区的页面
+     */
+    private void switchCity() {
+        Intent intent = new Intent(getApplicationContext(),ChooseProvinceActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

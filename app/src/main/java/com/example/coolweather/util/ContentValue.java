@@ -35,4 +35,8 @@ public class ContentValue {
      * sp中存储一天温度范围节点的key
      */
     public static final String TEMP= "temp";
+    /**
+     * sp中存储从哪个activity中启动的key
+     */
+    public static final String START_CODE = "start_code";
 }
