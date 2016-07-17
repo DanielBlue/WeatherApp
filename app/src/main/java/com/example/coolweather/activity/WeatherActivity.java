@@ -102,7 +102,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
     private void initData() {
         final Message message = new Message();
         countyName = Utility.getWeatherInfo(this,ContentValue.AREA_NAME);
-        String address = "http://v.juhe.cn/weather/index?cityname="+countyName+"&key=5d9d8d7431f0b864fa216cb311e5c226";
+        String address = "http://v.juhe.cn/weather/index?cityname="+countyName+"&key=e82ade8e346ca24743ee02c320498812";
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {

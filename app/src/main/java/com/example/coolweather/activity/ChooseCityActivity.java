@@ -73,7 +73,7 @@ public class ChooseCityActivity extends Activity{
             }
             handler.sendEmptyMessage(0);
         } else{
-            HttpUtil.sendHttpRequest("http://v.juhe.cn/weather/citys?key=5d9d8d7431f0b864fa216cb311e5c226", new HttpCallbackListener() {
+            HttpUtil.sendHttpRequest("http://v.juhe.cn/weather/citys?key=e82ade8e346ca24743ee02c320498812", new HttpCallbackListener() {
                 @Override
                 public void onFinish(String response) {
                     cityList = Utility.handleCityResponse(coolWeatherDB,response,cityList,provinceName);
